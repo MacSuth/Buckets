@@ -39,49 +39,49 @@ public class Buckets {
 		int water;
 	}
 	
-	public static int getVolume(Buckets bucket)
+	public int getVolume()
 	{
-		return bucket.size;
+		return this.size;
 	}
 	
-	public static void setVolume(Buckets bucket, int x)
+	public void setVolume(int x)
 	{
-		bucket.size = x;
+		this.size = x;
 	}
 	
-	public static boolean getLargest(Buckets bucket)
+	public boolean getLargest()
 	{
-		return bucket.largest;
+		return this.largest;
 	}
 	
-	public static void setLargest(Buckets bucket, boolean x)
+	public void setLargest(boolean x)
 	{
-		bucket.largest = x;
+		this.largest = x;
 	}
 	
-	public static int getWater(Buckets bucket)
+	public int getWater()
 	{
-		return bucket.water;
+		return this.water;
 	}
 	
-	public static void setWater(Buckets bucket, int x)
+	public void setWater(int x)
 	{
-		bucket.water = x;
+		this.water = x;
 	}
 	
-	public static void fillBucket(Buckets bucket)
+	public void fillBucket()
 	{
-		bucket.water = bucket.size;
+		this.water = this.size;
 	}
 	
-	public static void emptyBucket(Buckets bucket)
+	public void emptyBucket()
 	{
-		bucket.water = 0;
+		this.water = 0;
 	}
 	
 	public static boolean notFull(Buckets bucket)
 	{
-		if(getWater(bucket) == getVolume(bucket))
+		if(bucket.getWater() == bucket.getVolume())
 			return false;
 		else
 			return true;
@@ -89,31 +89,23 @@ public class Buckets {
 	
 	public static void transfer(Buckets from, Buckets to)
 	{
-		int allowed = getVolume(to) - getWater(to);
+		int allowed = to.getVolume() - to.getWater();
 		
-		if(getWater(from) >= allowed)
+		if(from.getWater()>= allowed)
 		{
-			setWater(from, getWater(from) - allowed);
-			setWater(to, getWater(to) + allowed);
+			from.setWater(from.getWater() - allowed);
+			to.setWater(to.getWater() + allowed);
 		}
 		else
 		{
-			setWater(to, getWater(to) + getWater(from));
-			emptyBucket(from);
+			to.setWater(to.getWater() + from.getWater());
+			from.emptyBucket();
 		}
-	}
-	
-	public static void swapBuckets(Buckets primary, Buckets secondary)
-	{
-		// Check if target fits in either bucket
-		// If target vol doesn't fit in primary, make secondary primary
-		
-		if()
 	}
 	
 	public static boolean lessThanTarget(Buckets pBucket)
 	{
-		if(getWater(pBucket) < target)
+		if(pBucket.getWater() < target)
 			return true;
 		else
 			return false;
@@ -133,28 +125,25 @@ public class Buckets {
 		
 		System.out.println("Enter Primary Bucket's size: \n");
 		int pBuckSize = scan.nextInt();
-		setVolume(pBucket, pBuckSize);
+		pBucket.setVolume(pBuckSize);
 		
 		System.out.println("\nEnter Secondary Bucket's size: \n");
 		int sBuckSize = scan.nextInt();
-		setVolume(sBucket, sBuckSize);
+		sBucket.setVolume(sBuckSize);
 		
 		System.out.println("\nPlease enter the target volume: \n");
 		target = scan.nextInt();
 		
-		if(getVolume(pBucket) > getVolume(sBucket))
-			setLargest(pBucket, true);
+		if(pBucket.getVolume() > sBucket.getVolume())
+			pBucket.setLargest(true);
 		else
-			setLargest(sBucket, true);
-		
-		// if target is greater than pBucket volume, swap bucket positions
-		swapBuckets(pBucket, sBucket);
+			sBucket.setLargest(true);
 		
 		
 		
 		// Any time Primary Bucket hits "0", fill it
-		if(getWater(pBucket) == 0)
-			fillBucket(pBucket);
+		if(pBucket.getWater() == 0)
+			pBucket.fillBucket();
 		
 		if(lessThanTarget(pBucket) && notFull(sBucket))
 			transfer(pBucket, sBucket);
