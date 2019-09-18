@@ -14,6 +14,7 @@ This can only transfer the amount that is empty in the target
 container. The remaining stays in the source container.
 3. Empty – you can empty the contents of a bucket
 Given the above, two routes are possible.
+
 Route 1: 3 to 5.
 
 ```
