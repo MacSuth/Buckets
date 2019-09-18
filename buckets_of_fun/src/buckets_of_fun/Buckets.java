@@ -19,7 +19,6 @@ import java.util.Scanner;
 public class Buckets {
 
 	private int size;
-	private boolean largest;
 	private int water;
 	
 	// 'target' not used in constructors, accessible everywhere
@@ -28,15 +27,13 @@ public class Buckets {
 	public Buckets()
 	{
 		int volume;
-		boolean largest;
 		int water = 0;
 	}
 	
-	public Buckets(int x, boolean y, int z)
+	public Buckets(int x, int y)
 	{
-		int volume;
-		boolean largest;
-		int water;
+		int volume = x;
+		int water = y;
 	}
 	
 	public int getVolume()
@@ -47,16 +44,6 @@ public class Buckets {
 	public void setVolume(int x)
 	{
 		this.size = x;
-	}
-	
-	public boolean getLargest()
-	{
-		return this.largest;
-	}
-	
-	public void setLargest(boolean x)
-	{
-		this.largest = x;
 	}
 	
 	public int getWater()
@@ -103,9 +90,9 @@ public class Buckets {
 		}
 	}
 	
-	public static boolean lessThanTarget(Buckets pBucket)
+	public boolean isFull()
 	{
-		if(pBucket.getWater() < target)
+		if(this.getWater() == this.getVolume())
 			return true;
 		else
 			return false;
@@ -118,35 +105,96 @@ public class Buckets {
 		 * be used
 		 */
 		
-		Buckets pBucket = new Buckets();
-		Buckets sBucket = new Buckets();
+		int counter = 1;
 		
 		Scanner scan = new Scanner(System.in);
 		
+		Buckets pBucket = new Buckets();
+		Buckets sBucket = new Buckets();
+		
 		System.out.println("Enter Primary Bucket's size: \n");
-		int pBuckSize = scan.nextInt();
-		pBucket.setVolume(pBuckSize);
+		int pSize = scan.nextInt();
+		pBucket.setVolume(pSize);
 		
 		System.out.println("\nEnter Secondary Bucket's size: \n");
-		int sBuckSize = scan.nextInt();
-		sBucket.setVolume(sBuckSize);
+		int sSize = scan.nextInt();
+		sBucket.setVolume(sSize);
 		
 		System.out.println("\nPlease enter the target volume: \n");
 		target = scan.nextInt();
+		System.out.println();
 		
-		if(pBucket.getVolume() > sBucket.getVolume())
-			pBucket.setLargest(true);
+		// FIGURE OUT COUNTER, DON'T NEED TO DISPLAY COUNTER AT END, JUST FIND OPTIMAL ROUTE
+		while(pBucket.getWater() != target && sBucket.getWater() != target)
+		{
+			counter++;
+			
+			if(pBucket.getWater() == 0)
+			{
+				pBucket.fillBucket();
+				System.out.println("Filling Primary Bucket... \n");
+			}
+			
+			else if(pBucket.isFull())
+			{
+				transfer(pBucket, sBucket);
+				System.out.println("Transferring from Primary to Secondary... \n");
+			}
+			
+			else if(sBucket.isFull())
+			{
+				sBucket.emptyBucket();
+				System.out.println("Emptying Secondary Bucket... \n");
+			}
+			
+			else if(pBucket.getWater() > 0 && !pBucket.isFull())
+			{
+				transfer(pBucket, sBucket);
+				System.out.println("Transferring from Primary to Secondary... \n");
+			}
+			
+			else if(pBucket.isFull() && !sBucket.isFull())
+			{
+				transfer(pBucket, sBucket);
+				System.out.println("Transferring from Primary to Secondary... \n");
+			}
+			
+			System.out.println("Primary Bucket: " + pBucket.getWater());
+			System.out.println("Secondary Bucket: " + sBucket.getWater());
+			System.out.println();
+			
+//			if(pBucket.getWater() == target || sBucket.getWater() == target)
+//				break;
+		}
+		
+		if(pBucket.getWater() == target && sBucket.getWater() != 0)
+		{
+			sBucket.emptyBucket();
+			
+			System.out.println("Emptying Secondary Bucket... \n");
+			System.out.println("Primary Bucket: " + pBucket.getWater());
+			System.out.println("Secondary Bucket: " + sBucket.getWater());
+			System.out.println();
+			
+			System.out.println("This problem was solved in " + counter + " steps.");
+		}
+		
+		else if(sBucket.getWater() == target && pBucket.getWater() != 0)
+		{
+			pBucket.emptyBucket();
+			
+			System.out.println("Emptying Primary Bucket... \n");
+			System.out.println("Primary Bucket: " + pBucket.getWater());
+			System.out.println("Secondary Bucket: " + sBucket.getWater());
+			System.out.println();
+			
+			System.out.println("This problem was solved in " + counter + " steps.");
+		}
+		
 		else
-			sBucket.setLargest(true);
-		
-		
-		
-		// Any time Primary Bucket hits "0", fill it
-		if(pBucket.getWater() == 0)
-			pBucket.fillBucket();
-		
-		if(lessThanTarget(pBucket) && notFull(sBucket))
-			transfer(pBucket, sBucket);
+		{
+			System.out.println("This problem was solved in " + counter + " steps.");
+		}
 	}
 
 }
