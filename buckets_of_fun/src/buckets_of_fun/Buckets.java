@@ -14,14 +14,16 @@
 
 package buckets_of_fun;
 
-import java.util.*;
+import java.util.Scanner;
 
 public class Buckets {
 
 	private int size;
 	private boolean largest;
-	private int target;
 	private int water;
+	
+	// 'target' not used in constructors, accessible everywhere
+	private static int target;
 
 	public Buckets()
 	{
@@ -62,7 +64,11 @@ public class Buckets {
 		return bucket.water;
 	}
 	
-	// fillBucket replaces "setWater"
+	public static void setWater(Buckets bucket, int x)
+	{
+		bucket.water = x;
+	}
+	
 	public static void fillBucket(Buckets bucket)
 	{
 		bucket.water = bucket.size;
@@ -73,18 +79,52 @@ public class Buckets {
 		bucket.water = 0;
 	}
 	
+	public static boolean notFull(Buckets bucket)
+	{
+		if(getWater(bucket) == getVolume(bucket))
+			return false;
+		else
+			return true;
+	}
+	
 	public static void transfer(Buckets from, Buckets to)
 	{
-		if(getWater(to) < getVolume(to))
-			null;
+		int allowed = getVolume(to) - getWater(to);
+		
+		if(getWater(from) >= allowed)
+		{
+			setWater(from, getWater(from) - allowed);
+			setWater(to, getWater(to) + allowed);
+		}
+		else
+		{
+			setWater(to, getWater(to) + getWater(from));
+			emptyBucket(from);
+		}
+	}
+	
+	public static void swapBuckets(Buckets primary, Buckets secondary)
+	{
+		// Check if target fits in either bucket
+		// If target vol doesn't fit in primary, make secondary primary
+		
+		if()
+	}
+	
+	public static boolean lessThanTarget(Buckets pBucket)
+	{
+		if(getWater(pBucket) < target)
+			return true;
+		else
+			return false;
 	}
 
 	public static void main(String[] args) {
-		// The largest bucket will always contain the target volume at the end
-		// If both buckets are of equal size, Primary Bucket (pBucket) will
-		// be used
-		
-		// Any time Primary Bucket hits "0", fill it
+		 /* 
+		  * The largest bucket will always contain the target volume at the end
+		 * If both buckets are of equal size, Primary Bucket (pBucket) will
+		 * be used
+		 */
 		
 		Buckets pBucket = new Buckets();
 		Buckets sBucket = new Buckets();
@@ -95,19 +135,29 @@ public class Buckets {
 		int pBuckSize = scan.nextInt();
 		setVolume(pBucket, pBuckSize);
 		
-		System.out.println("Enter Secondary Bucket's size: \n");
+		System.out.println("\nEnter Secondary Bucket's size: \n");
 		int sBuckSize = scan.nextInt();
 		setVolume(sBucket, sBuckSize);
 		
-		System.out.println("Please enter the target volume: \n");
-		int target = scan.nextInt();
+		System.out.println("\nPlease enter the target volume: \n");
+		target = scan.nextInt();
 		
 		if(getVolume(pBucket) > getVolume(sBucket))
 			setLargest(pBucket, true);
 		else
 			setLargest(sBucket, true);
 		
+		// if target is greater than pBucket volume, swap bucket positions
+		swapBuckets(pBucket, sBucket);
 		
+		
+		
+		// Any time Primary Bucket hits "0", fill it
+		if(getWater(pBucket) == 0)
+			fillBucket(pBucket);
+		
+		if(lessThanTarget(pBucket) && notFull(sBucket))
+			transfer(pBucket, sBucket);
 	}
 
 }
