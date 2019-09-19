@@ -1,6 +1,7 @@
 # Buckets of Fun
 
-Buckets of Fun - or just 'Buckets' - is a simple program to calculate the most efficient way to measure 'X' gallons of water given two buckets of 'Y' and 'Z' volumes.
+Buckets of Fun - or just 'Buckets' - is a simple program to calculate the most efficient way to measure 'X' gallons of water given two
+buckets of 'Y' and 'Z' volumes.
 
 ## Requirements
 
