@@ -66,14 +66,6 @@ public class Buckets {
 		this.water = 0;
 	}
 	
-	public static boolean notFull(Buckets bucket)
-	{
-		if(bucket.getWater() == bucket.getVolume())
-			return false;
-		else
-			return true;
-	}
-	
 	public static void transfer(Buckets from, Buckets to)
 	{
 		int allowed = to.getVolume() - to.getWater();
@@ -97,34 +89,17 @@ public class Buckets {
 		else
 			return false;
 	}
-
-	public static void main(String[] args) {
-		 /* 
-		  * The largest bucket will always contain the target volume at the end
-		 * If both buckets are of equal size, Primary Bucket (pBucket) will
-		 * be used
-		 */
+	
+	public static int algorithm(Buckets pBucket, Buckets sBucket)
+	{
+		int counter = 0;
 		
-		int counter = 1;
+		System.out.println(pBucket.getVolume() + "\t|\t" + sBucket.getVolume());
+		System.out.println("-------------------");
 		
-		Scanner scan = new Scanner(System.in);
+		System.out.print(pBucket.getWater() + "\t|\t" + sBucket.getWater());
+		System.out.println(" --> Begin");
 		
-		Buckets pBucket = new Buckets();
-		Buckets sBucket = new Buckets();
-		
-		System.out.println("Enter Primary Bucket's size: \n");
-		int pSize = scan.nextInt();
-		pBucket.setVolume(pSize);
-		
-		System.out.println("\nEnter Secondary Bucket's size: \n");
-		int sSize = scan.nextInt();
-		sBucket.setVolume(sSize);
-		
-		System.out.println("\nPlease enter the target volume: \n");
-		target = scan.nextInt();
-		System.out.println();
-		
-		// FIGURE OUT COUNTER, DON'T NEED TO DISPLAY COUNTER AT END, JUST FIND OPTIMAL ROUTE
 		while(pBucket.getWater() != target && sBucket.getWater() != target)
 		{
 			counter++;
@@ -132,48 +107,46 @@ public class Buckets {
 			if(pBucket.getWater() == 0)
 			{
 				pBucket.fillBucket();
-				System.out.println("Filling Primary Bucket... \n");
+				System.out.print(pBucket.getWater() + "\t|\t" + sBucket.getWater());
+				System.out.println(" --> Fill Primary Bucket");
 			}
 			
 			else if(pBucket.isFull())
 			{
 				transfer(pBucket, sBucket);
-				System.out.println("Transferring from Primary to Secondary... \n");
+				System.out.print(pBucket.getWater() + "\t|\t" + sBucket.getWater());
+				System.out.println(" --> Transfer from Primary to Secondary");
 			}
 			
 			else if(sBucket.isFull())
 			{
 				sBucket.emptyBucket();
-				System.out.println("Emptying Secondary Bucket... \n");
+				System.out.print(pBucket.getWater() + "\t|\t" + sBucket.getWater());
+				System.out.println(" --> Empty Secondary Bucket");
 			}
 			
 			else if(pBucket.getWater() > 0 && !pBucket.isFull())
 			{
 				transfer(pBucket, sBucket);
-				System.out.println("Transferring from Primary to Secondary... \n");
+				System.out.print(pBucket.getWater() + "\t|\t" + sBucket.getWater());
+				System.out.println(" --> Transfer from Primary to Secondary");
 			}
 			
 			else if(pBucket.isFull() && !sBucket.isFull())
 			{
 				transfer(pBucket, sBucket);
-				System.out.println("Transferring from Primary to Secondary... \n");
+				System.out.print(pBucket.getWater() + "\t|\t" + sBucket.getWater());
+				System.out.println(" --> Transfer from Primary to Secondary");
 			}
-			
-			System.out.println("Primary Bucket: " + pBucket.getWater());
-			System.out.println("Secondary Bucket: " + sBucket.getWater());
-			System.out.println();
-			
-//			if(pBucket.getWater() == target || sBucket.getWater() == target)
-//				break;
 		}
 		
 		if(pBucket.getWater() == target && sBucket.getWater() != 0)
 		{
 			sBucket.emptyBucket();
-			
-			System.out.println("Emptying Secondary Bucket... \n");
-			System.out.println("Primary Bucket: " + pBucket.getWater());
-			System.out.println("Secondary Bucket: " + sBucket.getWater());
+			counter++;
+
+			System.out.print(pBucket.getWater() + "\t|\t" + sBucket.getWater());
+			System.out.println(" --> Empty Secondary Bucket");
 			System.out.println();
 			
 			System.out.println("This problem was solved in " + counter + " steps.");
@@ -182,10 +155,11 @@ public class Buckets {
 		else if(sBucket.getWater() == target && pBucket.getWater() != 0)
 		{
 			pBucket.emptyBucket();
+			counter++;
 			
-			System.out.println("Emptying Primary Bucket... \n");
-			System.out.println("Primary Bucket: " + pBucket.getWater());
-			System.out.println("Secondary Bucket: " + sBucket.getWater());
+
+			System.out.print(pBucket.getWater() + "\t|\t" + sBucket.getWater());
+			System.out.println(" --> Empty Secondary Bucket");
 			System.out.println();
 			
 			System.out.println("This problem was solved in " + counter + " steps.");
@@ -193,8 +167,80 @@ public class Buckets {
 		
 		else
 		{
+			System.out.println();
 			System.out.println("This problem was solved in " + counter + " steps.");
 		}
+		
+		pBucket.emptyBucket();
+		sBucket.emptyBucket();
+		return counter;
+	}
+
+	public static void main(String[] args) {
+
+		Scanner scan = new Scanner(System.in);
+		int response = 1;
+		int secret = 0;
+		
+		while(response == 1)
+		{
+			
+			Buckets pBucket = new Buckets();
+			Buckets sBucket = new Buckets();
+			
+			System.out.println("Enter Primary Bucket's size: \n");
+			int pSize = scan.nextInt();
+			pBucket.setVolume(pSize);
+			
+			System.out.println("\nEnter Secondary Bucket's size: \n");
+			int sSize = scan.nextInt();
+			sBucket.setVolume(sSize);
+			
+			System.out.println("\nPlease enter the target volume: \n");
+			target = scan.nextInt();
+			System.out.println();
+			
+			if(target > pSize && target > sSize)
+			{
+				if(secret == 1)
+				{
+					System.out.println("I'm not putting up with this today.");
+					System.exit(0);
+				}
+				System.out.println("No, that won't work. Why did you think that would work?");
+				System.out.println("Try that one again and see what I do. I double-dog dare you.\n");
+				secret++;
+			}
+			
+			else
+			{
+				System.out.println("\nRoute 1: " + pBucket.getVolume() + " to " + sBucket.getVolume());
+				System.out.println();
+				
+				int routeOne = algorithm(pBucket, sBucket);
+				
+				System.out.println("\nRoute 2: " + sBucket.getVolume() + " to " + pBucket.getVolume());
+				System.out.println();
+				
+				int routeTwo = algorithm(sBucket, pBucket);
+				
+				System.out.println();
+				
+				if(routeOne < routeTwo)
+					System.out.println("Route 1 is faster");
+				else if(routeTwo < routeOne)
+					System.out.println("Route 2 is faster");
+				else
+					System.out.println("Both Routes have the same speed");
+				
+				System.out.println("\nWould you like to continue? (1 - Continue, 0 - Exit)");
+				response = scan.nextInt();
+				if(response != 0 && response != 1)
+					response = 1;
+			}
+		}
+		
+		scan.close();
 	}
 
 }
