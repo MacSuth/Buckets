@@ -14,7 +14,7 @@ conveniently drive optimal deliverables and quickly reconceptualize given metric
 oriented procedures by intrinsically implementing flexible architectures. The resulting output will dramatically provide access to
 premium niche markets and objectively deploy quality success vectors.
 
-## Usage
+## For non-managers
 
 1: Run file
 
