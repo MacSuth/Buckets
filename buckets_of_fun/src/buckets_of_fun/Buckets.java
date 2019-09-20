@@ -97,6 +97,21 @@ public class Buckets {
 			return false;
 	}
 	
+	// Used to identify greatest common denominator to avoid logic issues
+	public static int gcd(int num)
+	{
+		int gcd = num - 1;
+		
+		for(int x = num; x > 0; x--)
+		{
+			if(num % gcd == 0)
+				return gcd;
+			else
+				gcd--;
+		}
+		return 1;
+	}
+	
 	// Moved Algorithm outside of main due to size
 	public static int algorithm(Buckets pBucket, Buckets sBucket)
 	{
@@ -234,6 +249,54 @@ public class Buckets {
 				target = Math.abs(target);
 			System.out.println();
 			
+			/*
+			 * I identified a few test cases where the algorithm fails. My
+			 * solutions to these bugs are commented below. These fixes
+			 * work for most test cases, but I was not personally satisfied with
+			 * the results.
+			 * 
+			 * I believe that a better algorithm could circumvent these issues
+			 * entirely, but I'm unable to think of a new one in the given time.
+			 * At this point, I would reach out to another developer for assistance.
+			 * Since this is a test for my own abilities, I will only use my own work here.
+			 */
+			
+//			/*
+//			 * If two of the three buckets share a greatest common denominator,
+//			 * the target can't be achieved.
+//			 * If all three share a GCD, it can.
+//			 * If none of them share a GCD, it can.
+//			 */
+//			int pGCD = gcd(pSize);
+//			int sGCD = gcd(sSize);
+//			int tGCD = gcd(target);
+//			
+//			if((pGCD == sGCD && pGCD != tGCD) ||
+//					(pGCD == tGCD && pGCD != sGCD) ||
+//					(sGCD == tGCD && sGCD != pGCD))
+//			{
+//				System.out.println("I'm sorry, this combination will not work if\n"
+//						+ "two numbers share a common denominator\n");
+//				continue;
+//			}
+			
+//			// For two buckets of even volume, an odd target can't be reached
+//			if(pSize % 2 == 0 && sSize % 2 == 0 && target % 2 != 0)
+//			{
+//				System.out.println("I'm sorry, this combination will not work,\n"
+//						+ "two even volumes cannot measure an odd target.\n");
+//				continue;
+//			}
+			
+//			// If one volume is the GCD for another,
+//			if(pGCD == sSize ||
+//					sGCD == pSize)
+//			{
+//				System.out.println("I'm sorry, this combination will not work,\n"
+//						+ "one volume is the");
+//				continue;
+//			}
+			
 			// If you try to break the code with unexpected values
 			if(target > pSize && target > sSize)
 			{
@@ -242,7 +305,7 @@ public class Buckets {
 					System.out.println("I'm not putting up with this today.");
 					System.exit(0);
 				}
-				System.out.println("No, that won't work. Why did you think that would work?");
+				System.out.println("Target volume can't be larger than bucket volumes.");
 				System.out.println("Try that one again and see what I do. I double-dog dare you.\n");
 				secret++;
 				continue;
